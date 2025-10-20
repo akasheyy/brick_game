@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tetris Game</title>
+<link rel="stylesheet"href="game.css">
+
+</head>
+<body>
+  <div id="info">
+    <h2>🎮 TETRIS</h2>
+    <p>Score: <span id="score">0</span> | High Score: <span id="highscore">0</span></p>
+    <button id="startBtn">Start Game</button> <button id="restartBtn">Restart</button>
+  </div>
+
+ <canvas id="tetris"></canvas>
+
+
+<div id="mobileControls">
+  <button id="leftBtn">←</button>
+  <button id="rotateBtn">⟳</button>
+  <button id="rightBtn">→</button>
+  <button id="downBtn">↓</button>
+</div>
+</body>
+<script src="game.js"></script>
+</html>
