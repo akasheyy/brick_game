@@ -1,4 +1,3 @@
-
 const canvas = document.getElementById("tetris");
 const ctx = canvas.getContext("2d");
 const startBtn = document.getElementById("startBtn");
@@ -135,8 +134,9 @@ function lockPiece() {
   if (collision(0, 0, piece.shape)) {
     gameOver = true;
     gamePaused = true;
-    document.getElementById("startBtn").textContent = "Start Game";
-    document.getElementById("startBtn").style.display = "inline-block";
+    draw(); // draw final board
+    restartBtn.style.display = "inline-block"; // show restart button
+    startBtn.style.display = "none"; // hide start button
   }
 }
 
@@ -159,18 +159,27 @@ function rotate() {
   if (!collision(0, 0, rotated)) piece.shape = rotated;
 }
 
+function drawGameOver() {
+  ctx.fillStyle = "rgba(0,0,0,0.75)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "red";
+  ctx.font = "bold 40px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
+}
+
 function draw() {
-  if (gamePaused) return;
-  const now = Date.now();
-  const delta = now - dropStart;
-
-  if (delta > 500) moveDown();
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBoard();
-  drawPiece();
+  if (!gameOver) drawPiece();
+  if (gameOver) drawGameOver();
 
-  if (!gameOver) requestAnimationFrame(draw);
+  if (!gamePaused && !gameOver) {
+    const now = Date.now();
+    const delta = now - dropStart;
+    if (delta > 500) moveDown();
+    requestAnimationFrame(draw);
+  }
 }
 
 document.addEventListener("keydown", e => {
@@ -188,17 +197,16 @@ downBtn.addEventListener("click", moveDown);
 
 // Start button
 startBtn.addEventListener("click", () => {
-  if (!gameStarted || gameOver) {
-    board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-    piece = randomPiece();
-    score = 0;
-    gameOver = false;
-    gameStarted = true;
-    gamePaused = false;
-    document.getElementById("score").textContent = score;
-    startBtn.style.display = "none";
-    draw();
-  }
+  board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+  piece = randomPiece();
+  score = 0;
+  gameOver = false;
+  gameStarted = true;
+  gamePaused = false;
+  document.getElementById("score").textContent = score;
+  startBtn.style.display = "none"; // hide start
+  restartBtn.style.display = "none"; // hide restart
+  draw();
 });
 
 // Restart button
@@ -209,6 +217,7 @@ restartBtn.addEventListener("click", () => {
   gameOver = false;
   gamePaused = false;
   document.getElementById("score").textContent = score;
+  restartBtn.style.display = "none"; // hide restart after click
   draw();
 });
 
