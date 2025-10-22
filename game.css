@@ -6,7 +6,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 95%;
     /* overflow: hidden; */
   }
   #game {
@@ -40,11 +40,11 @@ body {
   button {
     background: #444;
     color: white;
-    padding: 10px 16px;
+    padding: 16px 27px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 20px;
     transition: 0.2s;
   }
   button:active {
@@ -66,4 +66,11 @@ body {
 }
 #startBtn:hover {
   background: #218838;
+}
+
+#pauseBtn {
+  background-color: #ffaa00;
+  color: #fff;
+  display: none; /* hidden until game starts */
+  padding: 5px 15px;
 }
