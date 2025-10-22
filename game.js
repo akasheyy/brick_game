@@ -6,8 +6,10 @@ const leftBtn = document.getElementById("leftBtn");
 const rightBtn = document.getElementById("rightBtn");
 const rotateBtn = document.getElementById("rotateBtn");
 const downBtn = document.getElementById("downBtn");
+const pauseBtn = document.getElementById("pauseBtn");
 
-const ROWS = 20;
+
+const ROWS = 18;
 const COLS = 10;
 const BLOCK_SIZE = 30;
 canvas.width = COLS * BLOCK_SIZE;
@@ -206,6 +208,7 @@ startBtn.addEventListener("click", () => {
   document.getElementById("score").textContent = score;
   startBtn.style.display = "none"; // hide start
   restartBtn.style.display = "none"; // hide restart
+  pauseBtn.style.display = "inline-block";
   draw();
 });
 
@@ -219,6 +222,18 @@ restartBtn.addEventListener("click", () => {
   document.getElementById("score").textContent = score;
   restartBtn.style.display = "none"; // hide restart after click
   draw();
+});
+
+pauseBtn.addEventListener("click", () => {
+  if (gameOver || !gameStarted) return;
+
+  gamePaused = !gamePaused;
+  pauseBtn.textContent = gamePaused ? "Resume" : "Pause";
+
+  if (!gamePaused) {
+    dropStart = Date.now();
+    draw();
+  }
 });
 
 // Initialize
