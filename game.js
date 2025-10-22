@@ -1,22 +1,22 @@
 const canvas = document.getElementById("tetris");
 const ctx = canvas.getContext("2d");
+
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
+const pauseBtn = document.getElementById("pauseBtn");
 const leftBtn = document.getElementById("leftBtn");
 const rightBtn = document.getElementById("rightBtn");
 const rotateBtn = document.getElementById("rotateBtn");
 const downBtn = document.getElementById("downBtn");
-const pauseBtn = document.getElementById("pauseBtn");
-
 
 const ROWS = 18;
 const COLS = 10;
 const BLOCK_SIZE = 30;
+
 canvas.width = COLS * BLOCK_SIZE;
 canvas.height = ROWS * BLOCK_SIZE;
 
 const COLORS = ["cyan", "blue", "orange", "yellow", "green", "purple", "red"];
-
 const SHAPES = [
   [[1, 1, 1, 1]], // I
   [
@@ -45,17 +45,18 @@ const SHAPES = [
   ], // Z
 ];
 
-let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-let piece = null;
-let score = 0;
-let highscore = localStorage.getItem("tetrisHighScore") || 0;
-document.getElementById("score").textContent = score;
-document.getElementById("highscore").textContent = highscore;
-
-let dropStart = Date.now();
+let board, piece, score, highscore;
 let gameOver = false;
 let gamePaused = true;
 let gameStarted = false;
+let dropStart = Date.now();
+
+// Initialize high score
+highscore = localStorage.getItem("tetrisHighScore") || 0;
+document.getElementById("highscore").textContent = highscore;
+
+// Hide restart initially
+restartBtn.style.display = "none";
 
 function randomPiece() {
   const typeId = Math.floor(Math.random() * SHAPES.length);
@@ -111,7 +112,7 @@ function lockPiece() {
     });
   });
 
-  // clear lines
+  // clear full lines
   let lines = 0;
   for (let r = ROWS - 1; r >= 0; r--) {
     if (board[r].every(val => val !== 0)) {
@@ -125,6 +126,7 @@ function lockPiece() {
   score += lines * 100;
   document.getElementById("score").textContent = score;
 
+  // update highscore
   if (score > highscore) {
     highscore = score;
     localStorage.setItem("tetrisHighScore", score);
@@ -133,12 +135,17 @@ function lockPiece() {
 
   piece = randomPiece();
 
+  // Game over condition
   if (collision(0, 0, piece.shape)) {
     gameOver = true;
     gamePaused = true;
-    draw(); // draw final board
-    restartBtn.style.display = "inline-block"; // show restart button
-    startBtn.style.display = "none"; // hide start button
+
+    // Hide pause and show restart
+    pauseBtn.style.display = "none";
+    startBtn.style.display = "none";
+    restartBtn.style.display = "inline-block";
+
+    drawGameOver();
   }
 }
 
@@ -162,7 +169,7 @@ function rotate() {
 }
 
 function drawGameOver() {
-  ctx.fillStyle = "rgba(0,0,0,0.75)";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "red";
   ctx.font = "bold 40px Arial";
@@ -197,7 +204,7 @@ rightBtn.addEventListener("click", moveRight);
 rotateBtn.addEventListener("click", rotate);
 downBtn.addEventListener("click", moveDown);
 
-// Start button
+// 🎮 Start Game
 startBtn.addEventListener("click", () => {
   board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
   piece = randomPiece();
@@ -206,13 +213,15 @@ startBtn.addEventListener("click", () => {
   gameStarted = true;
   gamePaused = false;
   document.getElementById("score").textContent = score;
-  startBtn.style.display = "none"; // hide start
-  restartBtn.style.display = "none"; // hide restart
+
+  startBtn.style.display = "none";
+  restartBtn.style.display = "none";
   pauseBtn.style.display = "inline-block";
+
   draw();
 });
 
-// Restart button
+// 🔁 Restart Game
 restartBtn.addEventListener("click", () => {
   board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
   piece = randomPiece();
@@ -220,21 +229,23 @@ restartBtn.addEventListener("click", () => {
   gameOver = false;
   gamePaused = false;
   document.getElementById("score").textContent = score;
-  restartBtn.style.display = "none"; // hide restart after click
+
+  restartBtn.style.display = "none";
+  pauseBtn.style.display = "inline-block";
+
   draw();
 });
 
+// ⏸ Pause / Resume
 pauseBtn.addEventListener("click", () => {
   if (gameOver || !gameStarted) return;
-
   gamePaused = !gamePaused;
   pauseBtn.textContent = gamePaused ? "Resume" : "Pause";
-
   if (!gamePaused) {
     dropStart = Date.now();
     draw();
   }
 });
 
-// Initialize
+// Draw initial board
 drawBoard();
