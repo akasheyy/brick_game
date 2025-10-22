@@ -74,3 +74,24 @@ body {
   display: none; /* hidden until game starts */
   padding: 5px 15px;
 }
+
+@media (min-width: 768px) {
+  #mobileControls {
+    display: none;
+  }
+  #ins{
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+  #mobileControls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  #ins{
+    display: none;
+  }
+}
