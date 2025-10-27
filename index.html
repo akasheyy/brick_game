@@ -1,28 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tetris Game</title>
-<link rel="stylesheet"href="game.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tetris Interface</title>
+  <style>
+    /* ===== RESET ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
 
+    body {
+      background: linear-gradient(135deg, #1a1a40, #25256e);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* ===== HEADING ===== */
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-container {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      background: #00ffff;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      color: #1a1a40;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #00cccc;
+      transform: scale(1.05);
+    }
+
+    /* ===== POPUP BOX ===== */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .popup.active {
+      display: flex;
+    }
+
+    .popup-content {
+      background: #11114a;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      animation: fadeIn 0.3s ease;
+      position: relative;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #00ffff;
+    }
+
+    .popup-content h2 {
+      margin-bottom: 1rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 2rem;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="info">
-    <h2>🎮 TETRIS</h2>
-    <p>Score: <span id="score">0</span> | High Score: <span id="highscore">0</span></p>
-    <p id="ins">Use arrow keys to move ,up arrow to rotate</p>
-    <button id="startBtn">Start Game</button> <button id="restartBtn">Restart</button> <button id="pauseBtn">Pause</button>
+  <h1>Tetris</h1>
+
+  <div class="btn-container">
+    <button id="playBtn">Play</button>
+    <button id="howToPlayBtn">How to Play</button>
   </div>
 
- <canvas id="tetris"></canvas>
+  <!-- Popup -->
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <span class="close-btn" id="closeBtn">&times;</span>
+      <h2>How to Play</h2>
+      <p id="howToPlayText">
+        => In laptop or desktop<br>
 <br>
-<div id="mobileControls">
-  <button id="leftBtn">←</button>
-  <button id="rotateBtn">⟳</button>
-  <button id="rightBtn">→</button>
-  <button id="downBtn">↓</button>
-</div>
+            . You can use arrow key to move and rotate <br>
+            . Press C to hold and P to pause<br>
+<br>
+       => In mobile<br>
+          <br>
+            . Drag to move <br>
+            . Single tap to rotate<br> 
+            . Double tap to hold<br>
+        
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const howToPlayBtn = document.getElementById("howToPlayBtn");
+    const popup = document.getElementById("popup");
+    const closeBtn = document.getElementById("closeBtn");
+
+    howToPlayBtn.addEventListener("click", () => {
+      popup.classList.add("active");
+    });
+
+    closeBtn.addEventListener("click", () => {
+      popup.classList.remove("active");
+    });
+
+    // Close popup when clicking outside
+    window.addEventListener("click", (e) => {
+      if (e.target === popup) {
+        popup.classList.remove("active");
+      }
+    });
+
+   document.getElementById("playBtn").addEventListener("click", () => {
+  window.location.href = "game.html"; // <-- change this to your file name
+});
+
+  </script>
 </body>
-<script src="game.js"></script>
 </html>
